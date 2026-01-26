@@ -1,0 +1,81 @@
+/**
+ * Tour Virtual 360 Pro - Main JavaScript
+ * Gestiona menú móvil, contacto WhatsApp y analytics
+ */
+
+// ============================================================================
+// MOBILE MENU TOGGLE
+// ============================================================================
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('nav')) {
+            mobileMenu.classList.add('hidden');
+        }
+    });
+}
+
+// ============================================================================
+// WHATSAPP CONTACT HANDLER
+// ============================================================================
+function contactarWhatsApp(paquete) {
+    const mensajes = {
+        'Pack Airbnb Standard': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Airbnb Standard* (Tour 8K + fotos optimizadas) para mi alojamiento en [Barrio/Zona]. ¿Agenda disponible esta semana?',
+        'Pack Plus & Casas de Campo': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Plus & Casas de Campo* con vuelo de dron interior para mi alojamiento en [Barrio/Zona]. ¿Cuándo pueden venir?',
+        'Independencia de Plataformas': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre *Independencia de Plataformas* para vender directo sin comisiones con landing y pagos. ¿Cuál es el siguiente paso?'
+    };
+
+    const mensaje = mensajes[paquete] || 'Hola, quiero información sobre un Tour Virtual';
+    const whatsappUrl = `https://wa.me/59891665895?text=${encodeURIComponent(mensaje)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// ============================================================================
+// ANALYTICS - Link tracking for GTM
+// ============================================================================
+document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element => {
+    element.addEventListener('click', (e) => {
+        if (window.gtag) {
+            gtag('event', 'click', {
+                'event_category': 'engagement',
+                'event_label': element.getAttribute('aria-label') || element.textContent.trim()
+            });
+        }
+    });
+});
+
+// ============================================================================
+// KUULA LAZY LOAD (mejora LCP/TBT)
+// ============================================================================
+const kuulaBtn = document.getElementById('load-kuula');
+const kuulaContainer = document.getElementById('kuula-container');
+
+if (kuulaBtn && kuulaContainer) {
+    kuulaBtn.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.style.cssText = 'width:100%; height:100%; border:0;';
+        iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
+        iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
+        iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
+        iframe.loading = 'lazy';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+
+        kuulaContainer.innerHTML = '';
+        kuulaContainer.appendChild(iframe);
+    }, { once: true });
+}
