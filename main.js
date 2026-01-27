@@ -59,23 +59,19 @@ document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element =>
 });
 
 // ============================================================================
-// KUULA LAZY LOAD (mejora LCP/TBT)
+// KUULA AUTO LOAD
 // ============================================================================
-const kuulaBtn = document.getElementById('load-kuula');
 const kuulaContainer = document.getElementById('kuula-container');
 
-if (kuulaBtn && kuulaContainer) {
-    kuulaBtn.addEventListener('click', () => {
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'width:100%; height:100%; border:0;';
-        iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
-        iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
-        iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
-        iframe.loading = 'lazy';
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+if (kuulaContainer) {
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'width:100%; height:100%; border:0;';
+    iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
+    iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
+    iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
+    iframe.loading = 'lazy';
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
 
-        kuulaContainer.innerHTML = '';
-        kuulaContainer.appendChild(iframe);
-    }, { once: true });
+    kuulaContainer.appendChild(iframe);
 }
