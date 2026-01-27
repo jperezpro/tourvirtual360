@@ -59,19 +59,37 @@ document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element =>
 });
 
 // ============================================================================
-// KUULA AUTO LOAD
+// KUULA INTERSECTION OBSERVER (Carga cuando es visible)
 // ============================================================================
 const kuulaContainer = document.getElementById('kuula-container');
 
-if (kuulaContainer) {
+if (kuulaContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const iframe = document.createElement('iframe');
+                iframe.style.cssText = 'width:100%; height:100%; border:0;';
+                iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
+                iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
+                iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
+                iframe.setAttribute('allowfullscreen', '');
+                iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+
+                kuulaContainer.appendChild(iframe);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '50px' });
+
+    observer.observe(kuulaContainer);
+} else if (kuulaContainer) {
+    // Fallback para navegadores sin IntersectionObserver
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'width:100%; height:100%; border:0;';
     iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
     iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
     iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
-    iframe.loading = 'lazy';
     iframe.setAttribute('allowfullscreen', '');
     iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-
     kuulaContainer.appendChild(iframe);
 }

@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://kuula.co">
+    <link rel="dns-prefetch" href="https://files.kuula.io">
+    <link rel="dns-prefetch" href="https://static.kuula.io">
     <link rel="preload" href="assets/css/style.css" as="style">
     <!-- Open Graph Meta Tags for Social Sharing -->
     <meta property="og:type" content="website">
@@ -322,7 +324,7 @@
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4 text-white">Así luce tu alojamiento en 360</h2>
             <p class="text-center text-gray-400 mb-8 sm:mb-12">Reemplaza fotos planas por un recorrido inmersivo que responde dudas antes de que te escriban</p>
             <div class="mb-10 sm:mb-14">
-                <img src="images/gestures.png" alt="Instrucciones de gestos para el tour 360: desliza, pellizca y gira con tu dedo o ratón para navegar" class="w-1/2 mx-auto" loading="lazy"/>
+                <img src="images/gestures.png" alt="Instrucciones de gestos para el tour 360: desliza, pellizca y gira con tu dedo o ratón para navegar" class="w-1/2 mx-auto" loading="lazy" width="600" height="400"/>
             </div>
             <div id="kuula-container" class="relative rounded-3xl overflow-hidden border border-gray-700 shadow-2xl bg-gray-900" style="aspect-ratio: 16/9;">
             </div>
@@ -411,15 +413,15 @@
     })(window,document,'script','dataLayer','GTM-N8RF4X2T');</script>
 
     <!-- Google Analytics 4 (gtag.js) defer -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-3S2TPEPW5J"></script>
-    <script defer>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3S2TPEPW5J"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);} 
         gtag('js', new Date());
         gtag('config', 'G-3S2TPEPW5J');
     </script>
 
-    <script src="main.js"></script>
+    <script defer src="main.js"></script>
 
 </body>
 </html>
