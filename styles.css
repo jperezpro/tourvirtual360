@@ -340,14 +340,8 @@ video::-webkit-media-controls-play-button {
 .promo-btn {
     animation: pulse-soft 2s ease-in-out infinite;
     text-transform: none !important;
-}
-
-#countdown-timer {
-    color: #fef08a; /* yellow-200 - más brillante sobre naranja */
-    font-weight: 900;
-    font-size: 1.1em;
-}
-
-#slots-counter {
-    color: #ffffff; /* blanco puro para máximo contraste */
-    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
