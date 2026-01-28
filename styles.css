@@ -7,13 +7,15 @@
     backdrop-filter: blur(10px);
 }
 
-/* Promo Banner - Fixed positioning */
+/* Promo Banner - High Impact Design */
 #promo-banner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#promo-banner span {
+    font-weight: 700;
 }
 
 /* Interactive elements - Buttons & Links */
@@ -337,13 +339,15 @@ video::-webkit-media-controls-play-button {
 
 .promo-btn {
     animation: pulse-soft 2s ease-in-out infinite;
+    text-transform: none !important;
 }
+
 #countdown-timer {
-    color: #fbbf24; /* yellow-400 */
-    font-weight: bold;
+    color: #fef08a; /* yellow-200 - más brillante sobre naranja */
+    font-weight: 900;
+    font-size: 1.1em;
 }
 
 #slots-counter {
-    color: #6ee7b7; /* emerald-300 */
-    font-weight: bold;
-}
+    color: #ffffff; /* blanco puro para máximo contraste */
+    font-weight: 900;

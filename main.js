@@ -109,8 +109,8 @@ function initCountdown() {
         const difference = targetDate - now;
 
         if (difference <= 0) {
-            countdownElement.textContent = 'Agenda Cerrada';
-            countdownElement.classList.add('text-red-400');
+            countdownElement.textContent = 'CERRADO';
+            countdownElement.style.color = '#ef4444';
             return;
         }
 
@@ -124,9 +124,9 @@ function initCountdown() {
         const secondsStr = String(seconds).padStart(2, '0');
 
         if (days > 0) {
-            countdownElement.textContent = `Cierre en: ${days} día${days > 1 ? 's' : ''} ${hoursStr}:${minutesStr}:${secondsStr}`;
+            countdownElement.textContent = `${days}D ${hoursStr}:${minutesStr}:${secondsStr}`;
         } else {
-            countdownElement.textContent = `Cierre en: ${hoursStr}:${minutesStr}:${secondsStr}`;
+            countdownElement.textContent = `${hoursStr}:${minutesStr}:${secondsStr}`;
         }
     }
 
