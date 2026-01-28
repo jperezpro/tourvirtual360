@@ -94,3 +94,52 @@ if (kuulaContainer && 'IntersectionObserver' in window) {
     iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
     kuulaContainer.appendChild(iframe);
 }
+// ============================================================================
+// COUNTDOWN TIMER - Punta del Diablo Campaign
+// ============================================================================
+function initCountdown() {
+    const countdownElement = document.getElementById('countdown-timer');
+    if (!countdownElement) return;
+
+    // Fecha objetivo: 27 de marzo de 2026 a las 20:00 GMT-3 (Uruguay)
+    const targetDate = new Date('2026-03-27T20:00:00-03:00');
+
+    function updateCountdown() {
+        const now = new Date();
+        const difference = targetDate - now;
+
+        if (difference <= 0) {
+            countdownElement.textContent = 'Agenda Cerrada';
+            countdownElement.classList.add('text-red-400');
+            return;
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        const hoursStr = String(hours).padStart(2, '0');
+        const minutesStr = String(minutes).padStart(2, '0');
+        const secondsStr = String(seconds).padStart(2, '0');
+
+        if (days > 0) {
+            countdownElement.textContent = `Cierre en: ${days} día${days > 1 ? 's' : ''} ${hoursStr}:${minutesStr}:${secondsStr}`;
+        } else {
+            countdownElement.textContent = `Cierre en: ${hoursStr}:${minutesStr}:${secondsStr}`;
+        }
+    }
+
+    // Actualizar inmediatamente
+    updateCountdown();
+    
+    // Actualizar cada segundo
+    setInterval(updateCountdown, 1000);
+}
+
+// Iniciar countdown cuando cargue el DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCountdown);
+} else {
+    initCountdown();
+}

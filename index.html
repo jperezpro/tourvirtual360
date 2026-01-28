@@ -175,9 +175,13 @@
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-40 backdrop-blur-md bg-black bg-opacity-70 border-b border-gray-800">
         <!-- Promo Banner -->
-        <div id="promo-banner" class="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-2 border-b border-emerald-500">
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-4">
-                <span class="text-xs sm:text-sm md:text-base text-center">📍 Gira Rocha: Salimos de Montevideo/Canelones hacia Punta del Diablo (28-31 Mar). ¡Traslados $0!</span>
+        <div id="promo-banner" class="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-3 border-b border-emerald-500">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 px-4">
+                <span class="text-xs sm:text-sm md:text-base font-bold text-center">📍 PUNTA DEL DIABLO | 28-31 Mar: Única visita 2026.</span>
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+                    <span id="slots-counter" class="text-xs sm:text-sm font-bold bg-red-600 px-3 py-1 rounded-full">¡Solo 12 cupos!</span>
+                    <span id="countdown-timer" class="text-xs sm:text-sm font-bold text-yellow-300">Cierre en: 00:00:00</span>
+                </div>
                 <button onclick="contactarWhatsApp('Punta del Diablo')" class="bg-white text-emerald-700 px-4 py-1 rounded-full font-bold hover:scale-105 transition shadow-md promo-btn whitespace-nowrap">
                     Reservar Cupo
                 </button>
