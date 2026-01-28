@@ -36,7 +36,8 @@ function contactarWhatsApp(paquete) {
     const mensajes = {
         'Pack Airbnb Standard': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Airbnb Standard* (Tour 8K + fotos optimizadas) para mi alojamiento en [Barrio/Zona]. ¿Agenda disponible esta semana?',
         'Pack Plus & Casas de Campo': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Plus & Casas de Campo* con vuelo de dron interior para mi alojamiento en [Barrio/Zona]. ¿Cuándo pueden venir?',
-        'Independencia de Plataformas': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre *Independencia de Plataformas* para vender directo sin comisiones con landing y pagos. ¿Cuál es el siguiente paso?'
+        'Independencia de Plataformas': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre *Independencia de Plataformas* para vender directo sin comisiones con landing y pagos. ¿Cuál es el siguiente paso?',
+        'Punta del Diablo': 'Hola! Soy de Punta del Diablo y vi que viajan desde Montevideo a fin de marzo. Me interesa reservar un cupo para un Tour 360 sin costo de traslado. ¿Tienen disponibilidad?'
     };
 
     const mensaje = mensajes[paquete] || 'Hola, quiero información sobre un Tour Virtual';

@@ -7,6 +7,15 @@
     backdrop-filter: blur(10px);
 }
 
+/* Promo Banner - Fixed positioning */
+#promo-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
 /* Interactive elements - Buttons & Links */
 button,
 a[href^="#"],
@@ -315,4 +324,17 @@ video::-webkit-media-controls-play-button {
 
 .animate-swipe {
     animation: swipeMotion 2s ease-in-out infinite;
+}
+/* Promo Banner Animations */
+@keyframes pulse-soft {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.promo-btn {
+    animation: pulse-soft 2s ease-in-out infinite;
 }

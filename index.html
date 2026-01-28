@@ -174,6 +174,16 @@
 
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-40 backdrop-blur-md bg-black bg-opacity-70 border-b border-gray-800">
+        <!-- Promo Banner -->
+        <div id="promo-banner" class="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-2 border-b border-emerald-500">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-4">
+                <span class="text-xs sm:text-sm md:text-base text-center">📍 Gira Rocha: Salimos de Montevideo/Canelones hacia Punta del Diablo (28-31 Mar). ¡Traslados $0!</span>
+                <button onclick="contactarWhatsApp('Punta del Diablo')" class="bg-white text-emerald-700 px-4 py-1 rounded-full font-bold hover:scale-105 transition shadow-md promo-btn whitespace-nowrap">
+                    Reservar Cupo
+                </button>
+            </div>
+        </div>
+
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <!-- Logo/Brand -->
             <a href="#" class="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400" title="Volver al inicio" aria-label="Tour Virtual 360 Pro - Tours 360 y Dron para alojamientos temporales">
@@ -209,10 +219,13 @@
         </div>
     </nav>
 
-    <header class="min-h-screen flex flex-col items-center justify-center text-center px-4 py-20 pt-32">
+    <header class="min-h-screen flex flex-col items-center justify-center text-center px-4 py-20 pt-48">
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 mb-4 max-w-full break-words leading-tight py-2">
-            Tours 360 para Airbnb y Booking en Montevideo
+            Tours 360 para Airbnb y Booking
         </h1>
+        <div class="inline-block bg-emerald-600 bg-opacity-20 border border-emerald-500 rounded-full px-4 py-2 mb-6 text-xs sm:text-sm">
+            <span class="text-emerald-300">Servicio líder en Montevideo y Canelones — Visita exclusiva a Punta del Diablo en Marzo</span>
+        </div>
         <p class="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl px-2">
             Tours 360 y dron para alojamientos en Montevideo y Canelones. Menos preguntas repetidas, más huéspedes listos para reservar. <span class="text-emerald-300 font-semibold">Entrega en 48hs.</span>
         </p>
