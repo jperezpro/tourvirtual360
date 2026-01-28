@@ -338,3 +338,12 @@ video::-webkit-media-controls-play-button {
 .promo-btn {
     animation: pulse-soft 2s ease-in-out infinite;
 }
+#countdown-timer {
+    color: #fbbf24; /* yellow-400 */
+    font-weight: bold;
+}
+
+#slots-counter {
+    color: #6ee7b7; /* emerald-300 */
+    font-weight: bold;
+}
