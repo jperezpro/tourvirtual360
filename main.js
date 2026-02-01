@@ -49,12 +49,23 @@ function contactarWhatsApp(paquete) {
 // ANALYTICS - Link tracking for GTM
 // ============================================================================
 document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element => {
-    element.addEventListener('click', (e) => {
+    element.addEventListener('click', () => {
+        const label = element.getAttribute('aria-label') || element.textContent.trim();
+        const isWhatsAppClick = element.matches('a[href*="wa.me"]') ||
+            ((element.getAttribute('onclick') || '').includes('contactarWhatsApp'));
+
         if (window.gtag) {
             gtag('event', 'click', {
                 'event_category': 'engagement',
-                'event_label': element.getAttribute('aria-label') || element.textContent.trim()
+                'event_label': label
             });
+
+            if (isWhatsAppClick) {
+                gtag('event', 'contactar_whatsapp', {
+                    'event_category': 'conversion',
+                    'event_label': label
+                });
+            }
         }
     });
 });
