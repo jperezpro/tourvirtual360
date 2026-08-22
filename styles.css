@@ -7,17 +7,6 @@
     backdrop-filter: blur(10px);
 }
 
-/* Promo Banner - High Impact Design */
-#promo-banner {
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-#promo-banner span {
-    font-weight: 700;
-}
-
 /* Interactive elements - Buttons & Links */
 button,
 a[href^="#"],
