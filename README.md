@@ -1,6 +1,6 @@
-# Tour Virtual 360UY - Tours 360 para Airbnb y Booking
+# Tour Virtual 360UY - Tours 360 y Dron para inmuebles y comercios
 
-Sitio web responsivo para servicios de tours virtuales 360 y dron en Montevideo y Canelones.
+Sitio web responsivo para servicios de tours virtuales 360 y dron para inmuebles, comercios y alojamientos en Montevideo y Canelones.
 
 ## 🚀 Setup Rápido
 
