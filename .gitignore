@@ -7,6 +7,9 @@ yarn.lock
 .env
 .env.local
 .env.*.local
+# Secrets locales de Cloudflare Pages (token de Notion). Nunca commitear.
+.dev.vars
+.wrangler/
 
 # IDE
 .vscode/

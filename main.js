@@ -47,27 +47,111 @@ function contactarWhatsApp(paquete) {
 // ============================================================================
 // ANALYTICS - Link tracking for GTM
 // ============================================================================
+// La conversion contacto_whatsapp NO se dispara desde aca: la maneja GTM con
+// el activador "Clic Boton Contactar". Este listener solo agrega el evento
+// generico de engagement, para no duplicar la conversion.
 document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element => {
     element.addEventListener('click', () => {
         const label = element.getAttribute('aria-label') || element.textContent.trim();
-        const isWhatsAppClick = element.matches('a[href*="wa.me"]') ||
-            ((element.getAttribute('onclick') || '').includes('contactarWhatsApp'));
 
         if (window.gtag) {
             gtag('event', 'click', {
                 'event_category': 'engagement',
                 'event_label': label
             });
-
-            if (isWhatsAppClick) {
-                gtag('event', 'contactar_whatsapp', {
-                    'event_category': 'conversion',
-                    'event_label': label
-                });
-            }
         }
     });
 });
+
+// ============================================================================
+// FORMULARIO DE CONTACTO (solo desktop)
+// ============================================================================
+const formContacto = document.getElementById('form-contacto-desktop');
+
+if (formContacto) {
+    const btnEnviar = document.getElementById('btn-enviar-formulario');
+    const estado = document.getElementById('form-contacto-estado');
+
+    const limpiarErrores = () => {
+        formContacto.querySelectorAll('[data-error]').forEach(p => {
+            p.textContent = '';
+            p.classList.add('hidden');
+        });
+    };
+
+    const mostrarErrores = (errores = {}) => {
+        Object.entries(errores).forEach(([campo, texto]) => {
+            const p = formContacto.querySelector(`[data-error="${campo}"]`);
+            if (p) {
+                p.textContent = texto;
+                p.classList.remove('hidden');
+            }
+        });
+    };
+
+    const setEstado = (texto, tipo) => {
+        estado.textContent = texto;
+        estado.className = `mt-4 text-center text-sm ${
+            tipo === 'ok' ? 'text-green-400' : tipo === 'error' ? 'text-red-400' : 'text-gray-400'
+        }`;
+    };
+
+    formContacto.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        limpiarErrores();
+
+        const datos = {
+            nombre: formContacto.nombre.value,
+            whatsapp: formContacto.whatsapp.value,
+            mensaje: formContacto.mensaje.value,
+            website: formContacto.website.value
+        };
+
+        btnEnviar.disabled = true;
+        setEstado('Enviando…', 'info');
+
+        try {
+            const respuesta = await fetch('/api/contacto', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+            const resultado = await respuesta.json().catch(() => ({}));
+
+            if (!respuesta.ok || !resultado.ok) {
+                if (resultado.error === 'validacion') {
+                    mostrarErrores(resultado.errores);
+                    setEstado('Revisá los campos marcados.', 'error');
+                } else {
+                    setEstado(
+                        'No pude recibir tu consulta. Probá de nuevo o escribime por WhatsApp.',
+                        'error'
+                    );
+                }
+                return;
+            }
+
+            // Evento para GA4 via GTM. Se dispara solo cuando el lead quedo
+            // efectivamente guardado, para no contar envios fallidos como
+            // conversion.
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'envio_formulario_desktop',
+                form_id: 'form-contacto-desktop'
+            });
+
+            formContacto.reset();
+            setEstado('¡Gracias! Te contactaré a la brevedad.', 'ok');
+        } catch (err) {
+            setEstado(
+                'No pude recibir tu consulta. Probá de nuevo o escribime por WhatsApp.',
+                'error'
+            );
+        } finally {
+            btnEnviar.disabled = false;
+        }
+    });
+}
 
 // ============================================================================
 // KUULA INTERSECTION OBSERVER (Carga cuando es visible)
