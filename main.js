@@ -141,7 +141,7 @@ if (formContacto) {
             });
 
             formContacto.reset();
-            setEstado('¡Gracias! Te contactaré a la brevedad.', 'ok');
+            setEstado('Mensaje enviado', 'ok');
         } catch (err) {
             setEstado(
                 'No pude recibir tu consulta. Probá de nuevo o escribime por WhatsApp.',
