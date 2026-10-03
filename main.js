@@ -30,38 +30,14 @@ if (mobileMenuBtn && mobileMenu) {
 }
 
 // ============================================================================
-// WHATSAPP CONTACT HANDLER
+// MEDICION
 // ============================================================================
-function contactarWhatsApp(paquete) {
-    const mensajes = {
-        'Pack Airbnb Standard': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Airbnb Standard* (Tour 8K + fotos optimizadas) para mi alojamiento en [Barrio/Zona]. ¿Agenda disponible esta semana?',
-        'Pack Plus & Casas de Campo': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre el *Pack Plus & Casas de Campo* con vuelo de dron interior para mi alojamiento en [Barrio/Zona]. ¿Cuándo pueden venir?',
-        'Independencia de Plataformas': 'Hola, vengo de tourvirtual360.pro y quiero más información sobre *Independencia de Plataformas* para vender directo sin comisiones con landing y pagos. ¿Cuál es el siguiente paso?'
-    };
-
-    const mensaje = mensajes[paquete] || 'Hola, quiero información sobre un Tour Virtual';
-    const whatsappUrl = `https://wa.me/59891665895?text=${encodeURIComponent(mensaje)}`;
-    window.open(whatsappUrl, '_blank');
-}
-
-// ============================================================================
-// ANALYTICS - Link tracking for GTM
-// ============================================================================
-// La conversion contacto_whatsapp NO se dispara desde aca: la maneja GTM con
-// el activador "Clic Boton Contactar". Este listener solo agrega el evento
-// generico de engagement, para no duplicar la conversion.
-document.querySelectorAll('a[href*="wa.me"], button.gtm-cta').forEach(element => {
-    element.addEventListener('click', () => {
-        const label = element.getAttribute('aria-label') || element.textContent.trim();
-
-        if (window.gtag) {
-            gtag('event', 'click', {
-                'event_category': 'engagement',
-                'event_label': label
-            });
-        }
-    });
-});
+// La medicion vive en GTM, no aca. La conversion contacto_whatsapp la dispara
+// el activador de clics en links con la clase `gtm-cta`: solo deben llevarla
+// los links que abren WhatsApp (wa.me), incluidos los "Contratar" de los
+// packs. Un link que no abre WhatsApp con esa clase infla la conversion que
+// usa la campaña de Google Ads. (03/10/2026: se saco el evento generico
+// "click" que se mandaba por gtag desde aca, resto de la medicion anterior.)
 
 // ============================================================================
 // FORMULARIO DE CONTACTO (solo desktop)
