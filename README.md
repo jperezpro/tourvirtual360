@@ -23,7 +23,9 @@ Si editas `assets/css/input.css`, ejecuta:
 ```bash
 npm run dev:css
 ```
-Esto recompila automáticamente mientras escribes.
+Esto recompila `assets/css/style.css` mientras escribes. Ojo: la página usa el
+CSS **incrustado** en `index.html`, así que al terminar corré `npm run build:css`
+para que el cambio llegue a la página.
 
 ## 📁 Estructura del Proyecto
 
@@ -38,23 +40,32 @@ Esto recompila automáticamente mientras escribes.
 ├── tailwind.config.js      # Config de Tailwind CSS
 ├── postcss.config.js       # Config de PostCSS
 ├── .gitignore              # Archivos ignorados en Git
+├── scripts/
+│   └── inline-css.js       # Incrusta style.css + styles.css en index.html
 ├── assets/
 │   └── css/
 │       ├── input.css       # Entrada de Tailwind (edita esto para CSS)
-│       └── style.css       # CSS compilado (generado automáticamente)
+│       └── style.css       # CSS compilado y minificado (generado)
 └── images/                 # Imágenes y recursos
 ```
 
 ## 🎨 Editar CSS
 
-### Cambios en CSS existentes:
-Edita `styles.css` directamente. Se refleja automáticamente en Live Server.
+El CSS no se carga como archivo aparte: va **incrustado** en un `<style>` de
+`index.html`, entre los marcadores `css-inline:inicio` y `css-inline:fin`. Así la
+página se pinta apenas llega el HTML, sin esperar hojas de estilo (en celular
+eso era lo que más demoraba la primera pintada). Lo que hay entre los marcadores
+no se edita a mano: lo regenera `npm run build:css`.
 
-### Cambios en utilidades/componentes Tailwind:
-1. Edita `assets/css/input.css`
-2. En terminal: `npm run build:css` (compila una vez)
-3. O: `npm run dev:css` (watch mode - se compila automático)
-4. Actualiza el navegador
+### Cambios en CSS existentes:
+1. Edita `styles.css`
+2. En terminal: `npm run build:css`
+3. Actualiza el navegador
+
+### Cambios en utilidades/componentes Tailwind (o clases nuevas en el HTML):
+1. Edita `assets/css/input.css` o las clases en `index.html`
+2. En terminal: `npm run build:css` (compila, minifica e incrusta)
+3. Actualiza el navegador
 
 ## 🚀 Desplegar a Cloudflare Pages
 
@@ -67,10 +78,10 @@ Edita `styles.css` directamente. Se refleja automáticamente en Live Server.
 ## 📝 Información de Desarrollo
 
 - **Framework**: HTML5 + Tailwind CSS v3 + Vanilla JavaScript
-- **CSS Compilado**: Tailwind genera automáticamente `assets/css/style.css`
+- **CSS Compilado**: Tailwind genera `assets/css/style.css` (minificado) y `scripts/inline-css.js` lo incrusta en `index.html` junto con `styles.css`
 - **Semántica HTML**: Jerarquía H1 → H2 → H3 (perfecta para SEO)
 - **Accesibilidad**: Estados `:hover` y `:focus` en todos los elementos interactivos
-- **Performance**: Google Fonts optimizadas con `display=swap`, imágenes lazy-loaded
+- **Performance**: CSS incrustado (ninguna hoja de estilos bloquea el render), fuentes del sistema (sin Google Fonts), imágenes en WebP y lazy-loaded
 
 ## ✨ Características
 
@@ -87,13 +98,13 @@ Edita `styles.css` directamente. Se refleja automáticamente en Live Server.
 | Comando | Qué hace |
 |---------|----------|
 | `npm install` | Instala dependencias (ejecutar después de clonar) |
-| `npm run build:css` | Compila CSS una sola vez |
-| `npm run dev:css` | Watch mode - compila automático mientras editas |
+| `npm run build:css` | Compila y minifica el CSS y lo incrusta en `index.html` |
+| `npm run dev:css` | Watch mode de `style.css` (después correr `build:css` para incrustarlo) |
 
 ## 🔍 Checklist antes de mergear cambios
 
 - [ ] Probé con Live Server y se ve bien
-- [ ] Si cambié `assets/css/input.css`, ejecuté `npm run build:css`
+- [ ] Si cambié `assets/css/input.css`, `styles.css` o clases en `index.html`, ejecuté `npm run build:css`
 - [ ] El HTML valida sin errores (F12 → Console)
 - [ ] Los estados `:hover` y `:focus` funcionan
 - [ ] Responsive en mobile, tablet y desktop

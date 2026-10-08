@@ -334,3 +334,4 @@ video::-webkit-media-controls-play-button {
     backface-visibility: hidden;
     transform: translateZ(0);
     will-change: transform;
+}

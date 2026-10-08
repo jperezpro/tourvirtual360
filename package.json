@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/style.css",
+    "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/style.css --minify && node scripts/inline-css.js",
     "dev:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/style.css --watch"
   },
   "devDependencies": {
