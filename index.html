@@ -17,8 +17,6 @@
     <meta name="language" content="es">
     <meta name="revisit-after" content="7 days">
     <link rel="canonical" href="https://tourvirtual360.pro/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://kuula.co">
     <link rel="dns-prefetch" href="https://files.kuula.io">
     <link rel="dns-prefetch" href="https://static.kuula.io">
@@ -40,8 +38,6 @@
     <title>Tours Virtuales 360 y Dron en Uruguay | Tour Virtual 360 Pro</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="preconnect" href="https://kuula.co">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="styles.css">
     
@@ -236,7 +232,10 @@
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-4 text-white">Muestra interactiva en 360°</h2>
             <p class="text-center text-gray-400 mb-8 sm:mb-12">Reemplaza fotos planas por un recorrido inmersivo que responde dudas antes de que te escriban</p>
             <div class="mb-10 sm:mb-14">
-                <img src="images/gestures.png" alt="Instrucciones de gestos para el tour 360: desliza, pellizca y gira con tu dedo o ratón para navegar" class="w-1/2 mx-auto" loading="lazy" width="600" height="400"/>
+                <picture>
+                    <source type="image/webp" srcset="images/gestures-480.webp 480w, images/gestures.webp 960w" sizes="(min-width: 928px) 448px, calc(50vw - 16px)">
+                    <img src="images/gestures.png" alt="Instrucciones de gestos para el tour 360: desliza, pellizca y gira con tu dedo o ratón para navegar" class="w-1/2 mx-auto" loading="lazy" width="600" height="400"/>
+                </picture>
             </div>
             <div id="kuula-container" class="relative rounded-3xl overflow-hidden border border-gray-700 shadow-2xl bg-gray-900" style="aspect-ratio: 16/9;">
             </div>
