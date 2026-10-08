@@ -19,6 +19,13 @@ a[href^="mailto"] {
     transition: all 200ms ease-in-out;
 }
 
+/* El boton flotante de WhatsApp tiene que flotar: la regla de arriba
+   (a[href^="https"]) le gana a la clase .fixed de Tailwind por especificidad
+   y lo dejaba fuera de la pantalla. */
+#cta-floating-wa {
+    position: fixed;
+}
+
 button:hover {
     transform: translateY(-2px);
 }
