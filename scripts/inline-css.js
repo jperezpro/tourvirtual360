@@ -44,8 +44,10 @@ if (i === -1 || f === -1 || f < i || html.indexOf(INICIO, i + 1) !== -1 || html.
     process.exit(1);
 }
 
+// Respetar el fin de linea del archivo (CRLF en Windows con autocrlf, LF en el build).
 const eol = html.includes('\r\n') ? '\r\n' : '\n';
-const nuevo = html.slice(0, i + INICIO.length) + eol + '    <style>' + css + '</style>' + eol + '    ' + html.slice(f);
+const bloque = ('    <style>' + css + '</style>').replace(/\n/g, eol);
+const nuevo = html.slice(0, i + INICIO.length) + eol + bloque + eol + '    ' + html.slice(f);
 if (nuevo !== html) {
     fs.writeFileSync(htmlPath, nuevo);
     console.log(`inline-css: index.html actualizado (${Buffer.byteLength(css)} bytes de CSS).`);
