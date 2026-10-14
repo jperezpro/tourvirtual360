@@ -136,11 +136,43 @@ if (formContacto) {
 // la tarjeta y se descartan al cerrar el visor, asi el portafolio no le suma
 // peso a la carga. Sin <dialog> (navegadores viejos) no se intercepta nada:
 // los links abren el video o el tour solos. Ninguno lleva `gtm-cta`: no son
-// contactos y no deben contar como conversion de la campaña.
+// contactos y no deben contar como conversion de la campaña. Al abrir un tour
+// aparecen encima las mismas indicaciones de gestos de la tarjeta.
 const visor = document.getElementById('visor');
 
 if (visor && typeof visor.showModal === 'function') {
     const contenido = document.getElementById('visor-contenido');
+
+    // Indicaciones de gestos: el <figure class="gestos"> de #demo, copiado
+    // encima del tour (sale de cache, 0 bytes). No tapa toques (CSS) y se va
+    // 3 s despues de que carga el tour, al primer toque adentro (la ventana
+    // pierde el foco) o a los 10 s. En iPhone el blur no siempre llega: para
+    // eso estan los tiempos.
+    const gestosTarjeta = document.querySelector('#demo .gestos');
+    let soltarGestos = () => {};
+
+    const mostrarGestos = (iframe) => {
+        if (!gestosTarjeta) return;
+        const aviso = gestosTarjeta.cloneNode(true);
+        aviso.setAttribute('aria-hidden', 'true');
+        contenido.append(aviso);
+
+        const timers = [];
+        let hecho = false;
+        const ocultar = () => {
+            if (hecho) return;
+            hecho = true;
+            aviso.classList.add('sale');
+            timers.forEach(clearTimeout);
+            window.removeEventListener('blur', ocultar);
+        };
+        timers.push(setTimeout(ocultar, 10000));
+        iframe.addEventListener('load', () => {
+            if (!hecho) timers.push(setTimeout(ocultar, 3000));
+        }, { once: true });
+        window.addEventListener('blur', ocultar);
+        soltarGestos = ocultar;
+    };
 
     const abrir = (link) => {
         const esVideo = link.dataset.visor === 'video';
@@ -157,6 +189,7 @@ if (visor && typeof visor.showModal === 'function') {
         }
         el.src = link.href;
         contenido.replaceChildren(el);
+        if (!esVideo) mostrarGestos(el);
         visor.setAttribute('aria-label', link.dataset.titulo);
         visor.showModal();
         // Una entrada en el historial para que "atras" en el celular cierre el
@@ -179,6 +212,7 @@ if (visor && typeof visor.showModal === 'function') {
     });
 
     visor.addEventListener('close', () => {
+        soltarGestos();
         contenido.replaceChildren();
         if (history.state && history.state.visor) history.back();
     });

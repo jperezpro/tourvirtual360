@@ -60,11 +60,23 @@ para que el cambio llegue a la página.
 
 ## 🎬 Sumar un trabajo al portafolio
 
-La sección `#demo` ("Trabajos reales en 360°") tiene una tarjeta por
-alojamiento: el poster del reel y el botón "Recorrer en 360°". Con la página
-solo bajan los posters (lazy); el reel y el tour se cargan al tocar, en el
-visor `#visor` (`main.js`), y se descartan al cerrarlo. Así el portafolio puede
-crecer sin que la página pese más.
+Cómo está armado (14/10/2026), con tres reglas de jvx: **un trabajo por bloque,
+una sola acción por bloque y nunca dos trabajos lado a lado** (dos reels juntos
+parecían un antes y después y obligaban a elegir; la decisión queda para los
+precios):
+
+- `#demo` ("Trabajos reales en 360°", después del hero): el reel de un
+  alojamiento y, debajo, el tour 360 del mismo lugar. Arriba de la tarjeta del
+  tour van las indicaciones de gestos (`<figure class="gestos">`, la imagen
+  `images/gestures*` con un rótulo por mano); `main.js` las copia encima del
+  tour cuando se abre y se van solas.
+- `#reel` ("Reels para tus redes", entre los beneficios y las garantías): el
+  reel de otro alojamiento, lejos del primero.
+
+Con la página solo bajan imágenes lazy; el reel y el tour se cargan al tocar,
+en el visor `#visor` (`main.js`), y se descartan al cerrarlo. Como máximo tres
+bloques: un trabajo nuevo **reemplaza** a uno de los que están, no se suma un
+cuarto.
 
 1. **Reel para web** (el de 4K es para redes, no para la página). Desde la raíz
    del repo, con el slug del tour (`tours.tourvirtual360.pro/<slug>/`):
@@ -76,18 +88,39 @@ crecer sin que la página pese más.
    Sale en ~2,5 Mbps: un reel de 70 s pesa ~23 MB. **Cloudflare Pages no acepta
    archivos de más de 25 MiB**: un reel de más de ~75 s necesita `-maxrate`
    más bajo. `+faststart` hace que empiece a reproducirse sin bajarlo entero.
-   Si se vuelve a exportar un reel, va con otro nombre (`<slug>-720b.mp4`):
-   `/videos/*` se cachea un año.
+   Se probó bajar a 1,8 y 1,5 Mbps (14-17 MB): la calidad medida con VMAF cae
+   4-8 puntos (El Villorrio queda debajo de 80, con artefactos en el follaje
+   del dron), y como el video baja solo al tocarlo, no vale la pena. Partir del
+   export 4K de DaVinci (H.264 a ~70 Mbps) es tan bueno como exportar directo a
+   720p. Si se vuelve a exportar un reel, va con otro nombre
+   (`<slug>-720b.mp4`): `/videos/*` se cachea un año.
 2. **Poster**: un cuadro lindo del reel (`-ss` = segundo), en dos anchos:
 
    ```bash
    ffmpeg -ss 20 -i "<reel 4K>.mp4" -frames:v 1 -vf "scale=360:-2:flags=lanczos" -c:v libwebp -quality 72 images/portafolio/<slug>-360.webp
    ffmpeg -ss 20 -i "<reel 4K>.mp4" -frames:v 1 -vf "scale=540:-2:flags=lanczos" -c:v libwebp -quality 72 images/portafolio/<slug>-540.webp
    ```
-3. **Tarjeta**: copiar un `<article>` de `#demo` en `index.html` y cambiar
-   slug, nombre, zona, duración y textos alternativos. Los links no llevan
-   `gtm-cta` (no son contactos: no deben contar como conversión de la campaña).
-4. Probar con `scripts/servidor-local.py` y publicar (push a `main`).
+3. **Poster del tour** (si el trabajo va en `#demo`): la vista inicial real del
+   tour, sacada de la foto 360 original con la `vista` de la primera escena de
+   `tour.json`. Ojo: en ffmpeg `v360` el pitch positivo es hacia arriba y en
+   Marzipano hacia abajo, así que va con el signo cambiado:
+
+   ```bash
+   ffmpeg -i "../tours-360/tours/<slug>/fotos/<foto de la 1ª escena>.jpg" -vf "v360=e:flat:yaw=<yaw>:pitch=<-pitch>:h_fov=100:v_fov=67.6:w=1920:h=1080:interp=lanczos" -q:v 2 tour.jpg
+   ffmpeg -i tour.jpg -vf "scale=640:-2:flags=lanczos" -c:v libwebp -quality 65 images/portafolio/<slug>-tour-640.webp
+   ffmpeg -i tour.jpg -vf "scale=960:-2:flags=lanczos" -c:v libwebp -quality 65 images/portafolio/<slug>-tour-960.webp
+   ```
+
+   Topes: ~22 KB y ~40 KB (si no, `-quality 60`). Si la foto tiene retoques
+   (`retoques.json`), usar la `_retocada.jpg`. Si se regenera, va con otro
+   nombre (`-tour-b-960.webp`): `/images/*` se cachea un año.
+4. **Bloque**: cambiar en `index.html` slug, nombre, zona, duración, textos
+   alternativos y `data-titulo` del bloque que se reemplaza. Los links no llevan
+   `gtm-cta` (no son contactos: no deben contar como conversión de la campaña)
+   y el del tour va sin `target` (ver el comentario en el HTML).
+5. `npm run build:css` si hay clases nuevas, probar con
+   `scripts/servidor-local.py` a 375 y a 1280 px y publicar (push a `main`).
+   Después, medir PSI móvil.
 
 ## 🎨 Editar CSS
 

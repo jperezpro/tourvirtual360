@@ -240,6 +240,7 @@ video::-webkit-media-controls-play-button {
 }
 
 #visor-contenido {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
@@ -274,6 +275,46 @@ video::-webkit-media-controls-play-button {
     border: 1px solid rgba(255, 255, 255, 0.5);
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
+}
+
+/* Indicaciones de gestos encima del tour: main.js copia el .gestos de #demo.
+   No tapan toques (pointer-events) y main.js les pone .sale para que se vayan.
+   #visor .gestos le gana a w-72, mx-auto y mb-5 que trae la copia. */
+#visor .gestos {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    width: min(88vw, 400px);
+    margin: 0;
+    padding: 16px 16px 12px;
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+#visor .gestos figcaption {
+    color: #fff;
+}
+
+#visor .gestos.sale {
+    opacity: 0;
+    visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #visor .gestos {
+        transition: none;
+    }
+}
+
+/* La regla global de foco pone border-radius .25rem: en los posters (con
+   overflow hidden) cuadraba las esquinas al volver del visor. */
+a[data-visor]:focus,
+a[data-visor]:focus-visible {
+    border-radius: 1rem;
 }
 
 @media (min-width: 768px) {
