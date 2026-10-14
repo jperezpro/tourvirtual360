@@ -130,37 +130,67 @@ if (formContacto) {
 }
 
 // ============================================================================
-// KUULA INTERSECTION OBSERVER (Carga cuando es visible)
+// PORTAFOLIO: reel y tour 360 en un visor a pantalla completa
 // ============================================================================
-const kuulaContainer = document.getElementById('kuula-container');
+// Con la pagina solo bajan los posters. El video y el tour se cargan al tocar
+// la tarjeta y se descartan al cerrar el visor, asi el portafolio no le suma
+// peso a la carga. Sin <dialog> (navegadores viejos) no se intercepta nada:
+// los links abren el video o el tour solos. Ninguno lleva `gtm-cta`: no son
+// contactos y no deben contar como conversion de la campaña.
+const visor = document.getElementById('visor');
 
-if (kuulaContainer && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const iframe = document.createElement('iframe');
-                iframe.style.cssText = 'width:100%; height:100%; border:0;';
-                iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
-                iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
-                iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+if (visor && typeof visor.showModal === 'function') {
+    const contenido = document.getElementById('visor-contenido');
 
-                kuulaContainer.appendChild(iframe);
-                observer.unobserve(entry.target);
-            }
+    const abrir = (link) => {
+        const esVideo = link.dataset.visor === 'video';
+        const el = document.createElement(esVideo ? 'video' : 'iframe');
+        if (esVideo) {
+            el.controls = true;
+            el.playsInline = true;
+            el.autoplay = true;
+            const poster = link.querySelector('img');
+            if (poster) el.poster = poster.currentSrc || poster.src;
+        } else {
+            el.title = link.dataset.titulo;
+            el.allow = 'fullscreen; gyroscope; accelerometer';
+        }
+        el.src = link.href;
+        contenido.replaceChildren(el);
+        visor.setAttribute('aria-label', link.dataset.titulo);
+        visor.showModal();
+        // Una entrada en el historial para que "atras" en el celular cierre el
+        // visor en vez de sacar a la persona de la pagina.
+        history.pushState({ visor: true }, '');
+
+        // Para GA4 cuando se cree la etiqueta en GTM (hoy no hay ninguna).
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: esVideo ? 'ver_reel' : 'abrir_tour',
+            trabajo: link.dataset.titulo
         });
-    }, { rootMargin: '50px' });
+    };
 
-    observer.observe(kuulaContainer);
-} else if (kuulaContainer) {
-    // Fallback para navegadores sin IntersectionObserver
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'width:100%; height:100%; border:0;';
-    iframe.src = 'https://kuula.co/share/collection/n1/7PNXK?logo=0&info=0&fs=1&vr=0&zoom=1&autorotate=0';
-    iframe.title = 'Tour Virtual 360 Pro - Demostración de Tour Inmersivo en Kuula';
-    iframe.allow = 'gyroscope; accelerometer; autoplay; encrypted-media';
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-    kuulaContainer.appendChild(iframe);
+    document.querySelectorAll('[data-visor]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            abrir(link);
+        });
+    });
+
+    visor.addEventListener('close', () => {
+        contenido.replaceChildren();
+        if (history.state && history.state.visor) history.back();
+    });
+
+    window.addEventListener('popstate', () => {
+        if (visor.open) visor.close();
+    });
+
+    document.getElementById('visor-cerrar').addEventListener('click', () => visor.close());
+
+    // Tocar el fondo oscuro, fuera del video o del tour, tambien cierra.
+    visor.addEventListener('click', (e) => {
+        if (e.target === visor || e.target === contenido) visor.close();
+    });
 }
