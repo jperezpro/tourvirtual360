@@ -326,6 +326,11 @@ a[data-visor]:focus-visible {
     }
 }
 
+/* El boton del tour de #reel es una pildora. */
+a[data-visor].rounded-full:focus-visible {
+    border-radius: 9999px;
+}
+
 @media (min-width: 768px) {
     #visor video {
         max-height: 90vh;

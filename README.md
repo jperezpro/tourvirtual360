@@ -73,7 +73,8 @@ precios):
   `images/gestures*` con un rótulo por mano); `main.js` las copia encima del
   tour cuando se abre y se van solas.
 - `#reel` ("Reels para tus redes", entre los beneficios y las garantías): el
-  reel de otro alojamiento, lejos del primero.
+  reel de otro alojamiento, lejos del primero, y debajo el botón "Recorrer en
+  360°" de su tour (jvx quiere que estén los dos tours).
 
 Con la página solo bajan imágenes lazy; el reel y el tour se cargan al tocar,
 en el visor `#visor` (`main.js`), y se descartan al cerrarlo. Como máximo tres
