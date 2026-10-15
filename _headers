@@ -20,7 +20,11 @@
 # contenido en cada deploy. Con "immutable" el navegador se quedaba hasta un
 # ano con la version vieja y los cambios no llegaban a quien ya habia entrado.
 # must-revalidate hace que pregunte al servidor; si no cambio, responde 304 y
-# no se descarga de nuevo.
+# no se descarga de nuevo. OJO (medido el 15/10/2026): en tourvirtual360.pro
+# el "Browser Cache TTL" de la zona de Cloudflare pisa el max-age=0 (llega
+# max-age=14400) y el borde guarda main.js hasta 1 h. Por eso index.html lo
+# pide como main.js?v=AAAAMMDD: cambiar esa version es lo que hace llegar el
+# main.js nuevo.
 /*.js
   Cache-Control: public, max-age=0, s-maxage=3600, must-revalidate
 

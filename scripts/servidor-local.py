@@ -9,6 +9,8 @@ Diferencias con `python -m http.server`, a proposito:
   CSP bloquearia en Cloudflare tambien falla aca.
 - Responde pedidos parciales (Range) como Cloudflare: Safari de iPhone no
   reproduce un video si el servidor no los acepta.
+- No sirve archivos que empiezan con punto (.dev.vars, .git) ni responde a
+  otro Host que 127.0.0.1 o localhost.
 """
 import http.server
 import io
@@ -57,6 +59,19 @@ class Manejador(http.server.SimpleHTTPRequestHandler):
         return io.BytesIO(datos)
 
     def send_head(self):
+        # Solo para quien entra por 127.0.0.1 o localhost: una pagina con DNS
+        # rebinding podria pedir archivos del repo con otro Host.
+        if self.headers.get('Host', '') not in (f'127.0.0.1:{PUERTO}', f'localhost:{PUERTO}'):
+            self.send_error(403)
+            return None
+        # Nada que empiece con punto (.dev.vars tiene el token de Notion, .git).
+        # Se mira la ruta real y no la pedida: Windows acepta nombres cortos
+        # como /DEV~1.VAR.
+        rel = os.path.relpath(os.path.realpath(self.translate_path(self.path)), RAIZ)
+        if rel.startswith('..') or any(p.startswith('.') and p != '.' for p in rel.split(os.sep)):
+            self.send_error(404)
+            return None
+
         if self.path.split('?')[0] in ('/', '/index.html'):
             with open(os.path.join(RAIZ, 'index.html'), encoding='utf-8') as f:
                 html = GTM.sub('', f.read())

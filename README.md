@@ -13,11 +13,13 @@ Solo eso. Instala las dependencias y estás listo.
 
 ### Desarrollo Local
 
-**Opción recomendada: `python -I scripts/servidor-local.py`** (servidor
-`tourvirtual360` de `.claude/launch.json`, `http://127.0.0.1:8360`). Saca Google
-Tag Manager de la página para que las pruebas no manden visitas a GA4 con
-hostname 127.0.0.1, aplica la CSP de `_headers` y acepta pedidos parciales de
-video como Cloudflare.
+**Opción recomendada: `python -I scripts/servidor-local.py`** (abre
+`http://127.0.0.1:8360`; otro puerto, como argumento). En la PC de jvx es el
+servidor `tourvirtual360` de `C:\claude-code-cowork\.claude\launch.json`, fuera
+del repo. Saca Google Tag Manager de la página para que las pruebas no manden
+visitas a GA4 con hostname 127.0.0.1, aplica la CSP de `_headers`, acepta
+pedidos parciales de video como Cloudflare y no sirve archivos que empiezan con
+punto (`.dev.vars`, `.git`).
 
 **Opción 1: Con Live Server (VS Code)** (ojo: carga GTM y cuenta visitas en GA4)
 - Click derecho en `index.html` → "Open with Live Server"
@@ -54,7 +56,7 @@ para que el cambio llegue a la página.
 │       ├── input.css       # Entrada de Tailwind (edita esto para CSS)
 │       └── style.css       # CSS compilado y minificado (generado)
 ├── images/                 # Imágenes y recursos
-│   └── portafolio/         # Posters de los reels (WebP, 360 y 540 px de ancho)
+│   └── portafolio/         # Posters de los reels (WebP, 360 y 540 px) y del tour (-tour-640/-tour-960)
 └── videos/                 # Reels del portafolio en versión web (720×1280)
 ```
 
@@ -121,6 +123,11 @@ cuarto.
 5. `npm run build:css` si hay clases nuevas, probar con
    `scripts/servidor-local.py` a 375 y a 1280 px y publicar (push a `main`).
    Después, medir PSI móvil.
+
+**Si cambia `main.js`**, cambiar también la versión con que lo pide
+`index.html` (`main.js?v=AAAAMMDD`). La zona de Cloudflare guarda `main.js` en
+el borde (1 h) y en el navegador (4 h) aunque `_headers` diga otra cosa: sin
+cambiar la versión, el HTML nuevo convive un rato con el `main.js` viejo.
 
 ## 🎨 Editar CSS
 

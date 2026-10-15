@@ -150,6 +150,8 @@ if (visor && typeof visor.showModal === 'function') {
     // eso estan los tiempos.
     const gestosTarjeta = document.querySelector('#demo .gestos');
     let soltarGestos = () => {};
+    let abiertoEn = 0;
+    let entradaPropia = false;
 
     const mostrarGestos = (iframe) => {
         if (!gestosTarjeta) return;
@@ -192,9 +194,13 @@ if (visor && typeof visor.showModal === 'function') {
         if (!esVideo) mostrarGestos(el);
         visor.setAttribute('aria-label', link.dataset.titulo);
         visor.showModal();
+        abiertoEn = performance.now();
         // Una entrada en el historial para que "atras" en el celular cierre el
-        // visor en vez de sacar a la persona de la pagina.
+        // visor en vez de sacar a la persona de la pagina. La marca va en
+        // memoria y no en history.state, que sobrevive a una recarga: con el
+        // state, un "atras" despues de recargar retrocedia una entrada de mas.
         history.pushState({ visor: true }, '');
+        entradaPropia = true;
 
         // Para GA4 cuando se cree la etiqueta en GTM (hoy no hay ninguna).
         window.dataLayer = window.dataLayer || [];
@@ -211,20 +217,45 @@ if (visor && typeof visor.showModal === 'function') {
         });
     });
 
-    visor.addEventListener('close', () => {
+    // Corta el video y libera el tour. Se puede llamar mas de una vez.
+    const vaciar = () => {
         soltarGestos();
         contenido.replaceChildren();
-        if (history.state && history.state.visor) history.back();
+    };
+
+    visor.addEventListener('close', () => {
+        vaciar();
+        if (entradaPropia) {
+            entradaPropia = false;
+            history.back();
+        }
     });
 
     window.addEventListener('popstate', () => {
+        entradaPropia = false;
         if (visor.open) visor.close();
+        // Respaldo por si el evento close no llega: que nunca quede un video
+        // sonando con el visor cerrado.
+        vaciar();
     });
 
-    document.getElementById('visor-cerrar').addEventListener('click', () => visor.close());
+    // Cerrar con un clic (la X o el fondo). Durante medio segundo la pagina no
+    // recibe clics: el segundo clic de un doble clic caia en lo que quedaba
+    // debajo, y debajo de la X esta "Contactar" (gtm-cta), que contaba una
+    // conversion de la campaña que nadie quiso hacer.
+    const cerrarPorClic = () => {
+        document.body.style.pointerEvents = 'none';
+        setTimeout(() => { document.body.style.pointerEvents = ''; }, 500);
+        visor.close();
+    };
 
-    // Tocar el fondo oscuro, fuera del video o del tour, tambien cierra.
+    document.getElementById('visor-cerrar').addEventListener('click', cerrarPorClic);
+
+    // Tocar el fondo oscuro, fuera del video o del tour, tambien cierra. No en
+    // el primer medio segundo: si no, el segundo clic de un doble clic sobre
+    // el poster cerraba el visor apenas se abria.
     visor.addEventListener('click', (e) => {
-        if (e.target === visor || e.target === contenido) visor.close();
+        if (performance.now() - abiertoEn < 500) return;
+        if (e.target === visor || e.target === contenido) cerrarPorClic();
     });
 }

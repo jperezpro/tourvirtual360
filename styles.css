@@ -222,8 +222,10 @@ video::-webkit-media-controls-play-button {
 
 /* Visor del portafolio (main.js): el reel o el tour 360 ocupan toda la
    pantalla en celular y un recuadro grande en desktop. */
+/* width 100% y no 100vw: con 100vw el visor quedaba debajo de la barra de
+   scroll de Windows y la tapaba parte de la X. */
 #visor {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     height: 100dvh;
     max-width: none;
@@ -291,6 +293,7 @@ video::-webkit-media-controls-play-button {
     padding: 16px 16px 12px;
     border-radius: 1rem;
     background: rgba(0, 0, 0, 0.7);
+    text-align: center;
     pointer-events: none;
     transition: opacity 0.5s ease, visibility 0.5s;
 }
@@ -310,11 +313,17 @@ video::-webkit-media-controls-play-button {
     }
 }
 
-/* La regla global de foco pone border-radius .25rem: en los posters (con
-   overflow hidden) cuadraba las esquinas al volver del visor. */
-a[data-visor]:focus,
+/* La regla global a:focus-visible pone border-radius .25rem: en los posters
+   (con overflow hidden) cuadraba las esquinas al volver del visor. La tarjeta
+   del tour es sm:rounded-3xl desde 640 px. */
 a[data-visor]:focus-visible {
     border-radius: 1rem;
+}
+
+@media (min-width: 640px) {
+    a[data-visor="tour"]:focus-visible {
+        border-radius: 1.5rem;
+    }
 }
 
 @media (min-width: 768px) {
