@@ -5,12 +5,14 @@
          compitan. type=image/avif: sin soporte de AVIF se saltea, sin doble descarga. -->
     <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(max-width: 767px)" imagesrcset="images/hero/costa-movil-540.avif 540w, images/hero/costa-movil-720.avif 720w" imagesizes="100vw">
     <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(min-width: 768px)" imagesrcset="images/hero/costa-desk-1280.avif 1280w, images/hero/costa-desk-1512.avif 1512w" imagesizes="100vw">
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <!-- Google Tag Manager, DIFERIDO (prueba): se carga recien despues del load
+         para que no le gane el procesador a la foto del inicio. Lo que se pushea
+         al dataLayer antes queda en cola y GTM lo procesa al llegar. -->
+    <script>window.dataLayer=window.dataLayer||[];window.addEventListener('load',function(){setTimeout(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-N8RF4X2T');</script>
+    })(window,document,'script','dataLayer','GTM-N8RF4X2T');},0);});</script>
     <!-- End Google Tag Manager -->
     
     <meta charset="UTF-8">
