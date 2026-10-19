@@ -428,3 +428,9 @@ a[data-visor].rounded-full:focus-visible {
     transform: translateZ(0);
     will-change: transform;
 }
+
+/* Inicio: sombra suave para que el texto se lea sobre la foto aerea. */
+.hero-titulo,
+.hero-texto {
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
