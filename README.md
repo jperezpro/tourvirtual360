@@ -163,6 +163,8 @@ no se edita a mano: lo regenera `npm run build:css`.
 - **Semántica HTML**: Jerarquía H1 → H2 → H3 (perfecta para SEO)
 - **Accesibilidad**: Estados `:hover` y `:focus` en todos los elementos interactivos
 - **Performance**: CSS incrustado (ninguna hoja de estilos bloquea el render), fuentes del sistema (sin Google Fonts), imágenes en WebP y lazy-loaded
+- **Inicio**: foto aérea real de fondo (`images/hero/`, AVIF de 17-30 KB con WebP de respaldo, precargada en el `<head>`). La zona del texto ya viene oscurecida en la imagen: si se cambia la foto, hacerlo igual (ver el commit "Inicio con foto aerea real") para que siga pesando poco.
+- **Google Tag Manager diferido** (decisión de jvx, 19/10/2026): se carga después del evento `load`. Sin diferir, GTM ocupaba el procesador justo cuando había que pintar la foto del inicio y PageSpeed móvil bajaba a 87-88; diferido da 99-100. Costo aceptado: no se miden las visitas que se van, ni los toques a WhatsApp, antes de que termine de cargar la página (1-2 s).
 
 ## ✨ Características
 
