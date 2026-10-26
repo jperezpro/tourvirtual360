@@ -1,0 +1,10 @@
+# Archivos del repositorio que Cloudflare Pages publica porque el sitio se sirve
+# desde la raiz: no son parte del sitio, se mandan a la portada.
+/README.md / 301
+/.gitignore / 301
+/.prettierrc / 301
+/package.json / 301
+/package-lock.json / 301
+/tailwind.config.js / 301
+/postcss.config.js / 301
+/scripts/* / 301
