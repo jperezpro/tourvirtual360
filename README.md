@@ -1,197 +1,62 @@
-# Tour Virtual 360UY - Tours 360 y Dron para inmuebles y comercios
+# Tour Virtual 360 · sitio web
 
-Sitio web responsivo para servicios de tours virtuales 360 y dron para inmuebles, comercios y alojamientos en Montevideo y Canelones.
+Sitio de una página de **Tour Virtual 360**: tours virtuales 360° y video con dron para alojamientos, inmuebles y comercios de Montevideo y Canelones, Uruguay.
 
-## 🚀 Setup Rápido
+- En producción: https://tourvirtual360.pro
 
-### Primera vez después de clonar:
+![Inicio del sitio: toma con dron de la costa de Santa Ana, Canelones](images/hero/costa-desk-1280.webp)
+
+## Qué resuelve
+
+- **Rápido en el celular.** El CSS va incrustado en el `<head>` (lo genera `scripts/inline-css.js` en el build), la foto del inicio pesa 17-30 KB en AVIF con WebP de respaldo, no se cargan fuentes externas y Google Tag Manager entra después del evento `load`. En la vista previa del 19/10/2026, PageSpeed Insights móvil pasó de 87-88 a 99-100.
+- **Portafolio liviano.** Los reels y los tours 360 de trabajos reales bajan solo cuando se tocan, dentro de un `<dialog>`; el botón Atrás del celular cierra el visor sin salir de la página.
+- **Contactos directo al CRM.** En escritorio, el formulario envía a una Cloudflare Pages Function (`functions/api/contacto.js`) que valida del lado del servidor, descarta bots con un honeypot y crea el contacto en una base de Notion por su API. El token vive como secret de Cloudflare: no llega al navegador ni al repositorio. En el celular, el contacto es por WhatsApp.
+- **Medición confiable.** GA4 y Google Ads por Tag Manager: la conversión cuenta solo los clics que abren WhatsApp y los envíos del formulario que se guardaron.
+- **SEO y datos estructurados.** schema.org `LocalBusiness` con `OfferCatalog` y `FAQPage`, alineados con el texto visible; Open Graph, `sitemap.xml`, `robots.txt` y una `404.html` propia.
+- **Seguridad.** `_headers` define Content-Security-Policy, HSTS, `X-Frame-Options`, `Permissions-Policy` y la caché de cada tipo de archivo; `_redirects` saca de la vista los archivos del repositorio que no son parte del sitio.
+
+## Stack
+
+HTML · Tailwind CSS 3 · JavaScript sin framework · Cloudflare Pages y Pages Functions · API de Notion · Google Tag Manager y GA4
+
+## Estructura
+
+```
+index.html                 Página: HTML, CSS incrustado y datos estructurados
+404.html                   Página de error (responde 404, sin indexar)
+main.js                    Visor del portafolio, formulario y eventos de medición
+styles.css                 Estilos propios (se incrustan en el build)
+assets/css/input.css       Entrada de Tailwind
+functions/api/contacto.js  Pages Function: formulario → CRM en Notion
+scripts/inline-css.js      Incrusta el CSS compilado en index.html
+scripts/servidor-local.py  Servidor de prueba sin GTM, con la CSP de producción
+_headers, _redirects       Headers de seguridad y caché; redirecciones de Cloudflare
+images/                    Foto del inicio, posters del portafolio, imagen para redes
+videos/                    Reels del portafolio en 720×1280
+```
+
+## Desarrollo local
+
 ```bash
 npm install
+npm run build:css                     # compila Tailwind, minifica e incrusta el CSS
+python -I scripts/servidor-local.py   # http://127.0.0.1:8360
 ```
 
-Solo eso. Instala las dependencias y estás listo.
+El servidor de prueba saca Google Tag Manager (las pruebas no suman visitas en GA4), aplica la misma CSP que producción y responde pedidos parciales de video como Cloudflare. Para probar el formulario: `NOTION_TOKEN` y `NOTION_DATA_SOURCE` en un `.dev.vars` (ignorado por git) y `npx wrangler pages dev . --ip 127.0.0.1`.
 
-### Desarrollo Local
+El CSS entre los marcadores `css-inline:inicio` y `css-inline:fin` de `index.html` no se edita a mano: lo regenera `npm run build:css`. Si cambia `main.js`, se cambia también su versión en `index.html` (`main.js?v=AAAAMMDD`), porque la caché de Cloudflare lo guarda hasta 4 horas.
 
-**Opción recomendada: `python -I scripts/servidor-local.py`** (abre
-`http://127.0.0.1:8360`; otro puerto, como argumento). En la PC de jvx es el
-servidor `tourvirtual360` de `C:\claude-code-cowork\.claude\launch.json`, fuera
-del repo. Saca Google Tag Manager de la página para que las pruebas no manden
-visitas a GA4 con hostname 127.0.0.1, aplica la CSP de `_headers`, acepta
-pedidos parciales de video como Cloudflare y no sirve archivos que empiezan con
-punto (`.dev.vars`, `.git`).
+## Despliegue
 
-**Opción 1: Con Live Server (VS Code)** (ojo: carga GTM y cuenta visitas en GA4)
-- Click derecho en `index.html` → "Open with Live Server"
-- La web se abre en `http://localhost:5500`
-- Los cambios se reflejan automáticamente
+Cloudflare Pages conectado a este repositorio: cada push a `main` publica el sitio y cada rama tiene su vista previa. Build command: `npm run build:css`. Los secrets `NOTION_TOKEN` y `NOTION_DATA_SOURCE` se cargan en el proyecto de Cloudflare, nunca en el repositorio.
 
-**Opción 2: Con watch mode automático del CSS**
-Si editas `assets/css/input.css`, ejecuta:
-```bash
-npm run dev:css
-```
-Esto recompila `assets/css/style.css` mientras escribes. Ojo: la página usa el
-CSS **incrustado** en `index.html`, así que al terminar corré `npm run build:css`
-para que el cambio llegue a la página.
+## Autoría
 
-## 📁 Estructura del Proyecto
+Diseño, desarrollo, fotos, video y tours: **Javier Perez** · https://jperez.pages.dev
 
-```
-├── index.html              # Página principal
-├── main.js                 # JavaScript interactivo
-├── styles.css              # Estilos personalizados
-├── _headers                # Headers de seguridad (Cloudflare)
-├── robots.txt              # SEO
-├── sitemap.xml             # SEO
-├── package.json            # Dependencias (npm install)
-├── tailwind.config.js      # Config de Tailwind CSS
-├── postcss.config.js       # Config de PostCSS
-├── .gitignore              # Archivos ignorados en Git
-├── scripts/
-│   ├── inline-css.js       # Incrusta style.css + styles.css en index.html
-│   └── servidor-local.py   # Servidor de prueba sin GTM (ver Desarrollo Local)
-├── assets/
-│   └── css/
-│       ├── input.css       # Entrada de Tailwind (edita esto para CSS)
-│       └── style.css       # CSS compilado y minificado (generado)
-├── images/                 # Imágenes y recursos
-│   └── portafolio/         # Posters de los reels (WebP, 360 y 540 px) y del tour (-tour-640/-tour-960)
-└── videos/                 # Reels del portafolio en versión web (720×1280)
-```
-
-## 🎬 Sumar un trabajo al portafolio
-
-Cómo está armado (14/10/2026), con tres reglas de jvx: **un trabajo por bloque,
-una sola acción por bloque y nunca dos trabajos lado a lado** (dos reels juntos
-parecían un antes y después y obligaban a elegir; la decisión queda para los
-precios):
-
-- `#demo` ("Trabajos reales en 360°", después del hero): el reel de un
-  alojamiento y, debajo, el tour 360 del mismo lugar. Arriba de la tarjeta del
-  tour van las indicaciones de gestos (`<figure class="gestos">`, la imagen
-  `images/gestures*` con un rótulo por mano); `main.js` las copia encima del
-  tour cuando se abre y se van solas.
-- `#reel` ("Reels para tus redes", entre los beneficios y las garantías): el
-  reel de otro alojamiento, lejos del primero, y debajo el botón "Recorrer en
-  360°" de su tour (jvx quiere que estén los dos tours).
-
-Con la página solo bajan imágenes lazy; el reel y el tour se cargan al tocar,
-en el visor `#visor` (`main.js`), y se descartan al cerrarlo. Como máximo tres
-bloques: un trabajo nuevo **reemplaza** a uno de los que están, no se suma un
-cuarto.
-
-1. **Reel para web** (el de 4K es para redes, no para la página). Desde la raíz
-   del repo, con el slug del tour (`tours.tourvirtual360.pro/<slug>/`):
-
-   ```bash
-   ffmpeg -i "<reel 4K>.mp4" -map 0:v:0 -map 0:a:0 -map_metadata -1 -vf "scale=720:1280:flags=lanczos" -c:v libx264 -preset slow -crf 23 -maxrate 2500k -bufsize 5000k -profile:v high -level 4.0 -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -ac 2 -ar 48000 -movflags +faststart videos/<slug>-720.mp4
-   ```
-
-   Sale en ~2,5 Mbps: un reel de 70 s pesa ~23 MB. **Cloudflare Pages no acepta
-   archivos de más de 25 MiB**: un reel de más de ~75 s necesita `-maxrate`
-   más bajo. `+faststart` hace que empiece a reproducirse sin bajarlo entero.
-   Se probó bajar a 1,8 y 1,5 Mbps (14-17 MB): la calidad medida con VMAF cae
-   4-8 puntos (El Villorrio queda debajo de 80, con artefactos en el follaje
-   del dron), y como el video baja solo al tocarlo, no vale la pena. Partir del
-   export 4K de DaVinci (H.264 a ~70 Mbps) es tan bueno como exportar directo a
-   720p. Si se vuelve a exportar un reel, va con otro nombre
-   (`<slug>-720b.mp4`): `/videos/*` se cachea un año.
-2. **Poster**: un cuadro lindo del reel (`-ss` = segundo), en dos anchos:
-
-   ```bash
-   ffmpeg -ss 20 -i "<reel 4K>.mp4" -frames:v 1 -vf "scale=360:-2:flags=lanczos" -c:v libwebp -quality 72 images/portafolio/<slug>-360.webp
-   ffmpeg -ss 20 -i "<reel 4K>.mp4" -frames:v 1 -vf "scale=540:-2:flags=lanczos" -c:v libwebp -quality 72 images/portafolio/<slug>-540.webp
-   ```
-3. **Poster del tour** (si el trabajo va en `#demo`): la vista inicial real del
-   tour, sacada de la foto 360 original con la `vista` de la primera escena de
-   `tour.json`. Ojo: en ffmpeg `v360` el pitch positivo es hacia arriba y en
-   Marzipano hacia abajo, así que va con el signo cambiado:
-
-   ```bash
-   ffmpeg -i "../tours-360/tours/<slug>/fotos/<foto de la 1ª escena>.jpg" -vf "v360=e:flat:yaw=<yaw>:pitch=<-pitch>:h_fov=100:v_fov=67.6:w=1920:h=1080:interp=lanczos" -q:v 2 tour.jpg
-   ffmpeg -i tour.jpg -vf "scale=640:-2:flags=lanczos" -c:v libwebp -quality 65 images/portafolio/<slug>-tour-640.webp
-   ffmpeg -i tour.jpg -vf "scale=960:-2:flags=lanczos" -c:v libwebp -quality 65 images/portafolio/<slug>-tour-960.webp
-   ```
-
-   Topes: ~22 KB y ~40 KB (si no, `-quality 60`). Si la foto tiene retoques
-   (`retoques.json`), usar la `_retocada.jpg`. Si se regenera, va con otro
-   nombre (`-tour-b-960.webp`): `/images/*` se cachea un año.
-4. **Bloque**: cambiar en `index.html` slug, nombre, zona, duración, textos
-   alternativos y `data-titulo` del bloque que se reemplaza. Los links no llevan
-   `gtm-cta` (no son contactos: no deben contar como conversión de la campaña)
-   y el del tour va sin `target` (ver el comentario en el HTML).
-5. `npm run build:css` si hay clases nuevas, probar con
-   `scripts/servidor-local.py` a 375 y a 1280 px y publicar (push a `main`).
-   Después, medir PSI móvil.
-
-**Si cambia `main.js`**, cambiar también la versión con que lo pide
-`index.html` (`main.js?v=AAAAMMDD`). La zona de Cloudflare guarda `main.js` en
-el borde (1 h) y en el navegador (4 h) aunque `_headers` diga otra cosa: sin
-cambiar la versión, el HTML nuevo convive un rato con el `main.js` viejo.
-
-## 🎨 Editar CSS
-
-El CSS no se carga como archivo aparte: va **incrustado** en un `<style>` de
-`index.html`, entre los marcadores `css-inline:inicio` y `css-inline:fin`. Así la
-página se pinta apenas llega el HTML, sin esperar hojas de estilo (en celular
-eso era lo que más demoraba la primera pintada). Lo que hay entre los marcadores
-no se edita a mano: lo regenera `npm run build:css`.
-
-### Cambios en CSS existentes:
-1. Edita `styles.css`
-2. En terminal: `npm run build:css`
-3. Actualiza el navegador
-
-### Cambios en utilidades/componentes Tailwind (o clases nuevas en el HTML):
-1. Edita `assets/css/input.css` o las clases en `index.html`
-2. En terminal: `npm run build:css` (compila, minifica e incrusta)
-3. Actualiza el navegador
-
-## 🚀 Desplegar a Cloudflare Pages
-
-1. **Primer deploy**: Conecta tu repositorio de GitHub en Cloudflare Pages
-2. **Build Settings**:
-   - Build command: `npm run build:css`
-   - Publish directory: (root) o `.`
-3. Los headers de seguridad se aplican automáticamente desde `_headers`
-
-## 📝 Información de Desarrollo
-
-- **Framework**: HTML5 + Tailwind CSS v3 + Vanilla JavaScript
-- **CSS Compilado**: Tailwind genera `assets/css/style.css` (minificado) y `scripts/inline-css.js` lo incrusta en `index.html` junto con `styles.css`
-- **Semántica HTML**: Jerarquía H1 → H2 → H3 (perfecta para SEO)
-- **Accesibilidad**: Estados `:hover` y `:focus` en todos los elementos interactivos
-- **Performance**: CSS incrustado (ninguna hoja de estilos bloquea el render), fuentes del sistema (sin Google Fonts), imágenes en WebP y lazy-loaded
-- **Inicio**: foto aérea real de fondo (`images/hero/`, AVIF de 17-30 KB con WebP de respaldo, precargada en el `<head>`). La zona del texto ya viene oscurecida en la imagen: si se cambia la foto, hacerlo igual (ver el commit "Inicio con foto aerea real") para que siga pesando poco.
-- **Google Tag Manager diferido** (decisión de jvx, 19/10/2026): se carga después del evento `load`. Sin diferir, GTM ocupaba el procesador justo cuando había que pintar la foto del inicio y PageSpeed móvil bajaba a 87-88; diferido da 99-100. Costo aceptado: no se miden las visitas que se van, ni los toques a WhatsApp, antes de que termine de cargar la página (1-2 s).
-
-## ✨ Características
-
-✅ Portafolio: tours 360 propios (tours.tourvirtual360.pro) y reels, cargados al tocar  
-✅ Botón flotante WhatsApp  
-✅ FAQ interactivo con `<details>`  
-✅ JSON-LD schema para SEO  
-✅ Responsive design (mobile-first)  
-✅ Seguridad headers configurados  
-✅ Sitemap y robots.txt  
-
-## 📞 Scripts NPM Disponibles
-
-| Comando | Qué hace |
-|---------|----------|
-| `npm install` | Instala dependencias (ejecutar después de clonar) |
-| `npm run build:css` | Compila y minifica el CSS y lo incrusta en `index.html` |
-| `npm run dev:css` | Watch mode de `style.css` (después correr `build:css` para incrustarlo) |
-
-## 🔍 Checklist antes de mergear cambios
-
-- [ ] Probé con Live Server y se ve bien
-- [ ] Si cambié `assets/css/input.css`, `styles.css` o clases en `index.html`, ejecuté `npm run build:css`
-- [ ] El HTML valida sin errores (F12 → Console)
-- [ ] Los estados `:hover` y `:focus` funcionan
-- [ ] Responsive en mobile, tablet y desktop
+© 2026 Javier Perez. El código se publica como muestra de trabajo. Las fotos, los videos y los tours pertenecen a Tour Virtual 360 y a sus clientes, y no se licencian para reutilización.
 
 ---
 
-**⚠️ IMPORTANTE**: Siempre ejecuta `npm install` cuando clonas el proyecto por primera vez. Si algo no funciona o los cambios no se reflejan, probablemente olvidaste este paso.
+**In English:** one-page website for Tour Virtual 360, a 360° virtual tour and drone video service in Uruguay. Static HTML and Tailwind CSS on Cloudflare Pages, with a Pages Function that sends contact requests to a Notion CRM.
