@@ -34,8 +34,8 @@ if (mobileMenuBtn && mobileMenu) {
 // ============================================================================
 // La medicion vive en GTM, no aca. La conversion contacto_whatsapp la dispara
 // el activador de clics en links con la clase `gtm-cta`: solo deben llevarla
-// los links que abren WhatsApp (wa.me), incluidos los "Contratar" de los
-// packs. Un link que no abre WhatsApp con esa clase infla la conversion que
+// los links que abren WhatsApp (wa.me), incluidos los "Pedir" de los
+// servicios. Un link que no abre WhatsApp con esa clase infla la conversion que
 // usa la campaña de Google Ads. (03/10/2026: se saco el evento generico
 // "click" que se mandaba por gtag desde aca, resto de la medicion anterior.)
 

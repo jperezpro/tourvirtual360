@@ -118,7 +118,7 @@ button[class*="border"]:active {
     outline-offset: 2px;
 }
 
-/* External links (WhatsApp, Kuula, etc) */
+/* External links (WhatsApp, tours en tours.tourvirtual360.pro, etc) */
 a[rel~="noopener"]:hover,
 a[target="_blank"]:hover {
     text-decoration: underline;
