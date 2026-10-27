@@ -40,92 +40,43 @@ if (mobileMenuBtn && mobileMenu) {
 // "click" que se mandaba por gtag desde aca, resto de la medicion anterior.)
 
 // ============================================================================
-// FORMULARIO DE CONTACTO (solo desktop)
+// CONSULTA POR WHATSAPP
 // ============================================================================
-const formContacto = document.getElementById('form-contacto-desktop');
+// Como en El Sandu: arma el mensaje con los datos del formulario y abre
+// WhatsApp con la consulta escrita. No pasa por ningun servidor. El evento
+// conserva el nombre `envio_formulario_desktop` porque es el que GTM ya tiene
+// como conversion; ahora sale tambien del celular y cuenta cuando se abre
+// WhatsApp, no cuando la persona envia el mensaje (eso no se puede saber).
+const WHATSAPP = '59891665895';
+const formContacto = document.getElementById('form-contacto');
 
 if (formContacto) {
-    const btnEnviar = document.getElementById('btn-enviar-formulario');
-    const estado = document.getElementById('form-contacto-estado');
+    const unir = (items) => items.length < 2
+        ? items.join('')
+        : `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}`;
 
-    const limpiarErrores = () => {
-        formContacto.querySelectorAll('[data-error]').forEach(p => {
-            p.textContent = '';
-            p.classList.add('hidden');
-        });
-    };
-
-    const mostrarErrores = (errores = {}) => {
-        Object.entries(errores).forEach(([campo, texto]) => {
-            const p = formContacto.querySelector(`[data-error="${campo}"]`);
-            if (p) {
-                p.textContent = texto;
-                p.classList.remove('hidden');
-            }
-        });
-    };
-
-    const setEstado = (texto, tipo) => {
-        estado.textContent = texto;
-        estado.className = `mt-4 text-center text-sm ${
-            tipo === 'ok' ? 'text-green-400' : tipo === 'error' ? 'text-red-400' : 'text-gray-400'
-        }`;
-    };
-
-    formContacto.addEventListener('submit', async (e) => {
+    formContacto.addEventListener('submit', (e) => {
         e.preventDefault();
-        limpiarErrores();
+        const d = new FormData(formContacto);
+        const limpio = (campo) => (d.get(campo) || '').replace(/\s+/g, ' ').trim();
+        const servicios = d.getAll('servicio');
 
-        const datos = {
-            nombre: formContacto.nombre.value,
-            whatsapp: formContacto.whatsapp.value,
-            mensaje: formContacto.mensaje.value,
-            website: formContacto.website.value
-        };
+        let texto = `Hola, vengo de tourvirtual360.pro. Soy ${limpio('nombre')} y `;
+        texto += servicios.length
+            ? `me interesa ${unir(servicios)}`
+            : 'quiero más información';
+        texto += ` para ${d.get('lugar')} en ${limpio('zona')}.`;
+        if (limpio('mensaje')) texto += ` ${limpio('mensaje')}`;
 
-        btnEnviar.disabled = true;
-        setEstado('Enviando…', 'info');
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'envio_formulario_desktop', form_id: 'form-contacto' });
 
-        try {
-            const respuesta = await fetch('/api/contacto', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            });
-            const resultado = await respuesta.json().catch(() => ({}));
-
-            if (!respuesta.ok || !resultado.ok) {
-                if (resultado.error === 'validacion') {
-                    mostrarErrores(resultado.errores);
-                    setEstado('Revisá los campos marcados.', 'error');
-                } else {
-                    setEstado(
-                        'No pude recibir tu consulta. Probá de nuevo o escribime por WhatsApp.',
-                        'error'
-                    );
-                }
-                return;
-            }
-
-            // Evento para GA4 via GTM. Se dispara solo cuando el lead quedo
-            // efectivamente guardado, para no contar envios fallidos como
-            // conversion.
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-                event: 'envio_formulario_desktop',
-                form_id: 'form-contacto-desktop'
-            });
-
-            formContacto.reset();
-            setEstado('Mensaje enviado', 'ok');
-        } catch (err) {
-            setEstado(
-                'No pude recibir tu consulta. Probá de nuevo o escribime por WhatsApp.',
-                'error'
-            );
-        } finally {
-            btnEnviar.disabled = false;
-        }
+        const url = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;
+        // Sin 'noopener' en window.open: con esa opcion devuelve null siempre
+        // y no se podria saber si el navegador bloqueo la ventana.
+        const ventana = window.open(url, '_blank');
+        if (ventana) ventana.opener = null;
+        else window.location.href = url;
     });
 }
 

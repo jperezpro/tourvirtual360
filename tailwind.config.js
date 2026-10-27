@@ -12,13 +12,6 @@ module.exports = {
         contenido.replace(/<!-- css-inline:inicio -->[\s\S]*?<!-- css-inline:fin -->/, ""),
     },
   },
-  // Clases que main.js aplica en runtime (estados del formulario de contacto).
-  // Tailwind no las ve al escanear el HTML, asi que hay que declararlas.
-  safelist: [
-    "text-green-400",
-    "text-red-400",
-    "text-gray-400",
-  ],
   theme: {
     extend: {},
   },
