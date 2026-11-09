@@ -50,6 +50,42 @@ if (mobileMenuBtn && mobileMenu) {
 const WHATSAPP = '59891665895';
 const formContacto = document.getElementById('form-contacto');
 
+// Visitas que llegan de un anuncio de Google (09/11/2026, pedido de jvx): el
+// mensaje de WhatsApp dice "los vi en Google" en lugar de "vengo de
+// tourvirtual360.pro", asi en el chat se sabe que la consulta vino del anuncio.
+// Se reconoce por el gclid (o gbraid/wbraid) que agrega el etiquetado
+// automatico de Google Ads, o por utm_source=google. Queda guardado en la
+// pestaña (sessionStorage) por si la persona recarga o vuelve atras.
+const DE_GOOGLE = (() => {
+    const p = new URLSearchParams(location.search);
+    const ahora = ['gclid', 'gbraid', 'wbraid'].some((k) => p.has(k))
+        || (p.get('utm_source') || '').toLowerCase() === 'google';
+    try {
+        if (ahora) sessionStorage.setItem('tv360-google', '1');
+        return ahora || sessionStorage.getItem('tv360-google') === '1';
+    } catch {
+        return ahora;
+    }
+})();
+
+const origen = (texto) => DE_GOOGLE
+    ? texto.replace('vengo de tourvirtual360.pro', 'los vi en Google')
+    : texto;
+
+if (DE_GOOGLE) {
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach((a) => {
+        try {
+            const url = new URL(a.href);
+            const texto = url.searchParams.get('text');
+            if (!texto) return;
+            url.searchParams.set('text', origen(texto));
+            a.href = url.toString();
+        } catch {
+            // Un href raro se deja como esta.
+        }
+    });
+}
+
 if (formContacto) {
     const unir = (items) => items.length < 2
         ? items.join('')
@@ -61,7 +97,7 @@ if (formContacto) {
         const limpio = (campo) => (d.get(campo) || '').replace(/\s+/g, ' ').trim();
         const servicios = d.getAll('servicio');
 
-        let texto = `Hola, vengo de tourvirtual360.pro. Soy ${limpio('nombre')} y `;
+        let texto = origen(`Hola, vengo de tourvirtual360.pro. Soy ${limpio('nombre')} y `);
         texto += servicios.length
             ? `me interesa ${unir(servicios)}`
             : 'quiero más información';
