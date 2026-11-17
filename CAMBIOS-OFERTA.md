@@ -11,12 +11,10 @@ diagnóstico «Diagnosticar por qué no se vende la oferta de Tour Virtual y Ess
   recorrido de toda la casa desde el celular, como si estuvieras adentro».
 - **Precios en pesos, por propiedad:** fotos y recorrido 360, 5.600 pesos; video con dron
   y reel, 2.800; solo fotos HDR, 2.500 (tarjeta nueva); sitio web propio, 670 pesos por mes.
-  Nada en U$S. Traslado incluido en Montevideo y Canelones; en Maldonado, 1.000 pesos por
-  visita salvo dos propiedades el mismo día. Seña del 30 % por transferencia o Mercado Pago (17/11).
+  Nada en U$S. Traslado incluido en Montevideo y Canelones. Seña del 30 % por transferencia o Mercado Pago (17/11).
 - **Sección nueva «Para inmobiliarias»** (`#inmobiliarias`, también en el menú) con su botón
   a WhatsApp (`cta-inmobiliarias`, con `gtm-cta`) y una línea para fotógrafos inmobiliarios.
-- **Zona:** Maldonado en la etiqueta del inicio, el texto de servicios, las preguntas,
-  el pie y `areaServed`.
+- **Zona:** solo Montevideo y Canelones (ver el ajuste del 17/11/2026).
 - **Fuera lo que el chat no sostiene:** «Satisfacción Garantizada / devolución del 100%»,
   «Sin costo inicial» y los plazos 24-48 hs y 3-5 días. Queda un solo plazo: 48 horas.
 - **Pregunta nueva «¿Qué es un recorrido 360?»**, en la página y en el `FAQPage`.
@@ -44,3 +42,7 @@ WhatsApp.
 - 20 fotos editadas en las tarjetas, el `FAQPage` y las ofertas del JSON-LD.
 - Ejemplo principal: el tour de El Sandú, con un link en el inicio y un botón en `#web`.
 - Instagram javierprff en `sameAs`.
+- Sin Maldonado (decisión de Javier, 17/11/2026: queda lejos para el precio y no se le
+  suma un recargo a nadie cuando el precio va en el anuncio). Zona: Montevideo y Canelones,
+  traslado incluido; fuera el «+1.000 pesos» de traslado de la etiqueta del inicio, la
+  tarjeta de inmobiliarias, la nota de precios, las preguntas, el pie, las metas y `areaServed`.
