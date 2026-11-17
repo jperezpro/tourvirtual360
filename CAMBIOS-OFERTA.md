@@ -12,7 +12,7 @@ diagnóstico «Diagnosticar por qué no se vende la oferta de Tour Virtual y Ess
 - **Precios en pesos, por propiedad:** fotos y recorrido 360, 5.600 pesos; video con dron
   y reel, 2.800; solo fotos HDR, 2.500 (tarjeta nueva); sitio web propio, 670 pesos por mes.
   Nada en U$S. Traslado incluido en Montevideo y Canelones; en Maldonado, 1.000 pesos por
-  visita salvo dos propiedades el mismo día. Seña del 50 %.
+  visita salvo dos propiedades el mismo día. Seña del 30 % por transferencia o Mercado Pago (17/11).
 - **Sección nueva «Para inmobiliarias»** (`#inmobiliarias`, también en el menú) con su botón
   a WhatsApp (`cta-inmobiliarias`, con `gtm-cta`) y una línea para fotógrafos inmobiliarios.
 - **Zona:** Maldonado en la etiqueta del inicio, el texto de servicios, las preguntas,
@@ -37,3 +37,10 @@ Frase para el sí: **«Publicá las webs nuevas»** (sale junto con la rama del 
 del repo `jperez`). Con ese sí: merge de `oferta-2026-11-16` a `main` y push; Cloudflare
 Pages publica solo. Después, abrir tourvirtual360.pro en el celular y probar un botón de
 WhatsApp.
+
+## Ajustes del 17/11/2026, antes de publicar
+
+- Seña del 30 % (antes 50 %), por transferencia o Mercado Pago, antes de agendar.
+- 20 fotos editadas en las tarjetas, el `FAQPage` y las ofertas del JSON-LD.
+- Ejemplo principal: el tour de El Sandú, con un link en el inicio y un botón en `#web`.
+- Instagram javierprff en `sameAs`.
